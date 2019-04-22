@@ -1,6 +1,6 @@
 'use strict';
 
-let budgetForAMonth, timeData, budgetForADay;
+let budgetForAMonth, timeData, budgetForADay, optionalExpenses;
 
 function start() {
     budgetForAMonth = +prompt("Какой бюджет на месяц?", "0");
@@ -19,9 +19,9 @@ let appData = {
         expenses: {},
         optionalExpenses: {},
         income: [],
-        savings: true
-    },
-    optionalExpenses = {};
+        savings: true,
+        optionalExpenses: {}
+    };
 
 function detectDayBudget() {
     budgetForADay = 0;
@@ -52,17 +52,13 @@ chooseExpenses();
 
 function chooseOptExpenses() {
     for (let i = 1; i < 4; i++) {
-        let optExpensesForAMonth = prompt("Введите необязательную статью расходов в этом месяце", ''),
-            moneyForOptExpenses = +prompt("Во сколько обойдутся эти расходы?");
+        let optExpensesForAMonth = prompt("Введите необязательную статью расходов в этом месяце", '');
 
         if ((typeof (optExpensesForAMonth)) == 'string' &&
             (typeof (optExpensesForAMonth)) != null &&
-            optExpensesForAMonth != '' &&
-            (typeof (moneyForOptExpenses)) != null &&
-            isNaN(moneyForOptExpenses) != true &&
-            moneyForOptExpenses != '') {
+            optExpensesForAMonth != '') {
             console.log('done');
-            optionalExpenses[i] = moneyForOptExpenses;
+            appData.optionalExpenses[i] = optExpensesForAMonth;
         } else {
             i--;
         }
@@ -125,4 +121,3 @@ function detectLevel() {
 detectLevel();
 
 console.log(appData);
-console.log(optionalExpenses);

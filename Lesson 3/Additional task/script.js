@@ -3,7 +3,7 @@
 let str = "урок-3-был слишком легким";
 
 console.log(str[0].toUpperCase() + str.slice(1).replace(/-/gi, " "));
-alert(str.slice(-6,-2) + "о");
+alert(str.match("легк") + "оо");
 
 let arr = [20, 33, 1, "Human", 2, 3];
 
