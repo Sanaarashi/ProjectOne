@@ -20,7 +20,8 @@ let startBtn = document.getElementById('start'),
     percentofSavings = document.querySelector('#percent'),
     year = document.querySelector('.year-value'),
     month = document.querySelector('.month-value'),
-    day = document.querySelector('.day-value');
+    day = document.querySelector('.day-value'),
+    bgImg = document.querySelector('body');
 
 let budgetForAMonth, timeData, isThereOptExp = false;
 
@@ -177,3 +178,5 @@ let appData = {
     isBudgetCalculated: false,
     isExpCalc: false
 };
+
+bgImg.style.backgroundImage = 'url(img/money.jpg)';
