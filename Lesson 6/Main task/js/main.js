@@ -9,7 +9,8 @@ let startBtn = document.getElementById('start'),
     incomeValue = document.querySelector('.income-value'),
     monthSavingsValue = document.querySelector('.monthsavings-value'),
     yearSavingValue = document.querySelector('.yearsavings-value'),
-    necessaryExp = document.getElementsByClassName('expenses-item'),
+
+    mainExp = document.getElementsByClassName('expenses-item'),
     acceptExpBtn = document.getElementsByTagName('button')[0],
     acceptOptExpBtn = document.getElementsByTagName('button')[1],
     calculateBtn = document.getElementsByTagName('button')[2],
@@ -23,14 +24,14 @@ let startBtn = document.getElementById('start'),
     day = document.querySelector('.day-value'),
     bgImg = document.querySelector('body');
 
-let budgetForAMonth, timeData, isThereOptExp = false;
+let budgetForAMonth, timeData;
 
 startBtn.addEventListener('click', function () {
     timeData = prompt("Введите сегодняшнюю дату в формате YYYY-MM-DD", "");
     budgetForAMonth = +prompt("Какой бюджет на месяц?", "0");
 
     while (isNaN(budgetForAMonth) || budgetForAMonth == null || budgetForAMonth == "") {
-        budgetForAMonth = +prompt("Какой бюджет на месяц?", "0")
+        budgetForAMonth = +prompt("Какой бюджет на месяц?", "0");
     }
     appData.budget = budgetForAMonth;
     appData.date = timeData;
@@ -39,47 +40,39 @@ startBtn.addEventListener('click', function () {
     month.value = new Date(Date.parse(timeData)).getMonth() + 1;
     day.value = new Date(Date.parse(timeData)).getDate();
     appData.isBudgetCalculated = true;
+
+    appData.isStarted = true;
+    acceptExpBtn.style.background = "green";
+    acceptExpBtn.removeAttribute('disabled', 'disabled');
 });
 
-acceptExpBtn.addEventListener('click', function () {
-    for (let i = 0; i < necessaryExp.length; i++) {
-        if (appData.necessaryExp[i] == undefined) {
-            acceptExpBtn.setAttribute('disabled', 'disabled');
-        }
-    }
+mainExp[1].addEventListener('input', function () {
+    mainExp[1].value = mainExp[1].value.replace(/[^0-9\.]/g, '');
 });
 
-
-necessaryExp[1].addEventListener('input', function() {
-    necessaryExp[1].value = necessaryExp[1].value.replace(/[^0-9\.]/g, '');
+mainExp[3].addEventListener('input', function () {
+    mainExp[3].value = mainExp[3].value.replace(/[^0-9\.]/g, '');
 });
-
-necessaryExp[3].addEventListener('input', function() {
-    necessaryExp[3].value = necessaryExp[3].value.replace(/[^0-9\.]/g, '');
-});
-
 
 acceptExpBtn.addEventListener('click', function () {
     let sum = 0;
 
-    for (let i = 0; i < necessaryExp.length; i++) {
-        let expensesForAMonth = necessaryExp[i].value,
-            moneyForExpenses = necessaryExp[++i].value;
-
-        if ((typeof (expensesForAMonth)) == 'string' &&
-            (typeof (expensesForAMonth)) != null &&
-            expensesForAMonth != '' &&
-            (typeof (moneyForExpenses)) != null &&
-            isNaN(moneyForExpenses) != true &&
-            moneyForExpenses != '') {
-            appData.expenses[expensesForAMonth] = moneyForExpenses;
-            sum += +moneyForExpenses;
-        } else {
-            i--;
+    for (let i = 0; i < mainExp.length - 1; i++) {
+        let a = mainExp[i].value,
+            b = mainExp[++i].value;
+        if ((typeof (a)) != null && (typeof (b)) != null && a != '' && b != '') {
+            appData.expenses[a] = b;
+            sum += +b;
         }
     }
     expensesValue.textContent = sum;
-    appData.isExpCalc = true;
+    if (sum > 0) {
+        appData.isExpCalc = true;
+    }
+    if (appData.isBudgetCalculated == true && appData.isExpCalc == true) {
+        calculateBtn.style.background = "green";
+        calculateBtn.removeAttribute('disabled', 'disabled');
+    };
 });
 
 optionalExpenses.forEach((elem) => {
@@ -101,19 +94,10 @@ acceptOptExpBtn.addEventListener('click', function () {
     }
 });
 
-calculateBtn.addEventListener('mouseenter', function () {
-    if (appData.isBudgetCalculated == true && appData.isExpCalc == true) {
-        calculateBtn.removeAttribute('disabled', 'disabled');
-    } else {
-        calculateBtn.setAttribute('disabled', 'disabled');
-    }
-});
-
 calculateBtn.addEventListener('click', function () {
     if (appData.budget != undefined) {
         appData.budgetForADay = ((appData.budget - +expensesValue.textContent) / 30).toFixed();
         dayBudgetValue.textContent = appData.budgetForADay;
-
         if (appData.budgetForADay < 100) {
             levelValue.textContent = "Минимальный уровень достатка";
         } else if (appData.budgetForADay > 100 && appData.budgetForADay < 2000) {
@@ -176,7 +160,21 @@ let appData = {
     income: [],
     savings: false,
     isBudgetCalculated: false,
-    isExpCalc: false
+    isExpCalc: false,
+    isStarted: false
 };
+
+startBtn.style.background = "green";
+
+if (appData.isStarted == false) {
+    acceptExpBtn.style.background = "red";
+    acceptExpBtn.setAttribute('disabled', 'disabled');
+}
+
+if (appData.isBudgetCalculated == false && appData.isExpCalc == false) {
+    calculateBtn.style.background = "red";
+    calculateBtn.setAttribute('disabled', 'disabled');
+};
+
 
 bgImg.style.backgroundImage = 'url(img/money.jpg)';
