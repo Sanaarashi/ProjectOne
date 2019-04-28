@@ -10,7 +10,7 @@ let startBtn = document.getElementById('start'),
     monthSavingsValue = document.querySelector('.monthsavings-value'),
     yearSavingValue = document.querySelector('.yearsavings-value'),
 
-    mainExp = document.getElementsByClassName('expenses-item'),
+    mainExp = document.querySelectorAll('.expenses-item'),
     acceptExpBtn = document.getElementsByTagName('button')[0],
     acceptOptExpBtn = document.getElementsByTagName('button')[1],
     calculateBtn = document.getElementsByTagName('button')[2],
@@ -74,6 +74,20 @@ acceptExpBtn.addEventListener('click', function () {
         calculateBtn.removeAttribute('disabled', 'disabled');
     };
 });
+
+mainExp.forEach((elem, i, arr) => {
+    elem.addEventListener('input', () => {
+        if ((arr[0].value !== '' && arr[1].value !== '' && (arr[2].value == '' && arr[3].value == '')) ||
+        (arr[2].value !== '' && arr[3].value !== '' && (arr[0].value == '' && arr[1].value == ''))) { 
+            acceptExpBtn.style.background ='green';
+            acceptExpBtn.removeAttribute('disabled, disabled');
+        } else if ( (arr[0].value == '') || (arr[1].value == '') || ((arr[2].value == '') || (arr[3].value == '')) ) {
+            acceptExpBtn.style.background ='red';
+            acceptExpBtn.setAttribute('disabled, disabled');
+        }
+    });
+});
+
 
 optionalExpenses.forEach((elem) => {
     elem.addEventListener('input', () => {
